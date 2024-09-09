@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.demo.PollAppTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-09-09T00:39:01" hostname="Wagens-Air.home" time="0.64">
+  <properties/>
+  <testcase name="testScenario()" classname="com.example.demo.PollAppTest" time="0.64"/>
+  <system-out><![CDATA[02:39:00.893 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.demo.PollAppTest]: PollAppTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+02:39:00.964 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.PollAppTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.3)
+
+2024-09-09T02:39:01.159+02:00  INFO 15747 --- [demo] [    Test worker] com.example.demo.PollAppTest             : Starting PollAppTest using Java 21.0.4 with PID 15747 (started by wagen in /Users/wagen/Documents/Skole/dat250/dat250-experiment-assignment-1)
+2024-09-09T02:39:01.159+02:00  INFO 15747 --- [demo] [    Test worker] com.example.demo.PollAppTest             : No active profile set, falling back to 1 default profile: "default"
+2024-09-09T02:39:01.778+02:00  INFO 15747 --- [demo] [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2024-09-09T02:39:01.778+02:00  INFO 15747 --- [demo] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2024-09-09T02:39:01.779+02:00  INFO 15747 --- [demo] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2024-09-09T02:39:01.795+02:00  INFO 15747 --- [demo] [    Test worker] com.example.demo.PollAppTest             : Started PollAppTest in 0.76 seconds (process running for 1.503)
+]]></system-out>
+  <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (/Users/wagen/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.19/154da3a65b4f4a909d3e5bdec55d1b2b4cbb6ce1/byte-buddy-agent-1.14.19.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>
