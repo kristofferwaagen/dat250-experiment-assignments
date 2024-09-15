@@ -1,11 +1,14 @@
 package com.example.demo.controllers;
 
 import com.example.demo.domain.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/polls")
 public class PollController {
@@ -18,21 +21,20 @@ public class PollController {
 
     // 1. Create a new poll
     @PostMapping
-    public String createPoll(@RequestBody Poll poll) {
+    public ResponseEntity<Poll> createPoll(@RequestBody Poll poll) {
         pollManager.addPoll(poll);
-        return "Poll created";
+        return ResponseEntity.status(HttpStatus.CREATED).body(poll);  // Return the created poll with 201 status
     }
 
     // 2. List all polls
     @GetMapping
     public List<Poll> listAllPolls() {
-        // Fix: Convert Map<String, Poll> to List<Poll>
         return new ArrayList<>(pollManager.getPolls().values());
     }
 
     // 3. User votes on a poll
     @PostMapping("/{question}/vote")
-    public String voteOnPoll(@PathVariable String question, @RequestBody Map<String, String> voteDetails) {
+    public ResponseEntity<String> voteOnPoll(@PathVariable String question, @RequestBody Map<String, String> voteDetails) {
         String username = voteDetails.get("username");
         String voteOptionCaption = voteDetails.get("voteOption");
 
@@ -40,7 +42,7 @@ public class PollController {
         Poll poll = pollManager.getPoll(question);
 
         if (user == null || poll == null) {
-            return "Invalid user or poll";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid user or poll");
         }
 
         VoteOption selectedOption = poll.getVoteOptions().stream()
@@ -49,30 +51,36 @@ public class PollController {
             .orElse(null);
 
         if (selectedOption == null) {
-            return "Invalid vote option";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid vote option");
         }
 
-        // Fix: Use Instant.now() for setting published time
         Vote vote = new Vote();
         vote.setPublishedAt(Instant.now());
         vote.setVoteOption(selectedOption);
-        
+
         pollManager.addVote(user, poll, vote);
 
-        return "Vote recorded";
+        return ResponseEntity.status(HttpStatus.OK).body("Vote recorded");
     }
 
     // 4. List votes for a poll
     @GetMapping("/{question}/votes")
-    public List<Vote> listVotes(@PathVariable String question) {
+    public ResponseEntity<List<Vote>> listVotes(@PathVariable String question) {
         Poll poll = pollManager.getPoll(question);
-        return pollManager.getVotesForPoll(poll);
+        if (poll == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(pollManager.getVotesForPoll(poll));
     }
 
     // 5. Delete a poll
     @DeleteMapping("/{question}")
-    public String deletePoll(@PathVariable String question) {
+    public ResponseEntity<String> deletePoll(@PathVariable String question) {
+        Poll poll = pollManager.getPoll(question);
+        if (poll == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Poll not found");
+        }
         pollManager.deletePoll(question);
-        return "Poll deleted";
+        return ResponseEntity.status(HttpStatus.OK).body("Poll deleted");
     }
 }

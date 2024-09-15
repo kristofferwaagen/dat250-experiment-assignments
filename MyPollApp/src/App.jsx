@@ -1,20 +1,15 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React from "react";
+import PollCreationComponent from "./Components/PollCreationComponent";
+import CounterComponent from "./Components/CounterComponent";
+import "./App.css";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              <h2>Welcome to the Poll App</h2>
-              <p>Select an option from the menu.</p>
-            </div>
-          }
-        />
-      </Routes>
-    </Router>
+    <div id="app">
+      <h1>Welcome to PollApp</h1>
+      <PollCreationComponent />
+      <CounterComponent />
+    </div>
   );
 }
 

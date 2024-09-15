@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 
 public class Poll {
+    private long id;  // Add an ID field to uniquely identify the poll
     private String question;
     private Instant publishedAt;
     private Instant validUntil;
@@ -13,6 +14,14 @@ public class Poll {
     public Poll() {}
 
     // Getters and Setters
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getQuestion() {
         return question;
     }
