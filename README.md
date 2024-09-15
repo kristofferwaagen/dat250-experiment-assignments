@@ -1,2 +1,2 @@
-# dat250-experiment-assignment-1
-Demo for first exercise in dat250
+# dat250-experiment-assignment-
+Made the PollApp using Vite and React
