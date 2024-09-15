@@ -40,4 +40,12 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(users);  // Return users with 200 OK
     }
+
+    // 3. Clear all users
+    @DeleteMapping("/clear")
+    public ResponseEntity<String> clearAllUsers() {
+        pollManager.clearUsers();
+        return ResponseEntity.ok("All users cleared");
+    }
+
 }

@@ -22,10 +22,10 @@ function PollCreationComponent() {
       validUntil: new Date(
         new Date().getTime() + 24 * 60 * 60 * 1000
       ).toISOString(),
-      options: options.map((option, index) => ({
+      voteOptions: options.map((option, index) => ({
         caption: option,
         presentationOrder: index + 1,
-        votes: 0,
+        votes: 0, // Initialize with 0 votes
       })),
     };
 

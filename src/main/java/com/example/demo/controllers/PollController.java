@@ -33,13 +33,13 @@ public class PollController {
     }
 
     // 3. User votes on a poll
-    @PostMapping("/{question}/vote")
-    public ResponseEntity<String> voteOnPoll(@PathVariable String question, @RequestBody Map<String, String> voteDetails) {
+    @PostMapping("/{pollId}/vote")
+    public ResponseEntity<String> voteOnPoll(@PathVariable int pollId, @RequestBody Map<String, String> voteDetails) {
         String username = voteDetails.get("username");
         String voteOptionCaption = voteDetails.get("voteOption");
 
         User user = pollManager.getUser(username);
-        Poll poll = pollManager.getPoll(question);
+        Poll poll = pollManager.getPollById(pollId);
 
         if (user == null || poll == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid user or poll");
@@ -64,9 +64,9 @@ public class PollController {
     }
 
     // 4. List votes for a poll
-    @GetMapping("/{question}/votes")
-    public ResponseEntity<List<Vote>> listVotes(@PathVariable String question) {
-        Poll poll = pollManager.getPoll(question);
+    @GetMapping("/{pollId}/votes")
+    public ResponseEntity<List<Vote>> listVotes(@PathVariable int pollId) {
+        Poll poll = pollManager.getPollById(pollId);
         if (poll == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -74,13 +74,46 @@ public class PollController {
     }
 
     // 5. Delete a poll
-    @DeleteMapping("/{question}")
-    public ResponseEntity<String> deletePoll(@PathVariable String question) {
-        Poll poll = pollManager.getPoll(question);
+    @DeleteMapping("/{pollId}")
+    public ResponseEntity<String> deletePoll(@PathVariable int pollId) {
+        Poll poll = pollManager.getPollById(pollId);
         if (poll == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Poll not found");
         }
-        pollManager.deletePoll(question);
+        pollManager.deletePoll(pollId);
         return ResponseEntity.status(HttpStatus.OK).body("Poll deleted");
+    }
+
+    // 6. Upvote an option
+    @PostMapping("/{pollId}/options/{optionIndex}/upvote")
+    public ResponseEntity<String> upvote(@PathVariable int pollId, @PathVariable int optionIndex) {
+        Poll poll = pollManager.getPollById(pollId);
+        if (poll == null || optionIndex < 0 || optionIndex >= poll.getVoteOptions().size()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Poll or option not found");
+        }
+
+        VoteOption option = poll.getVoteOptions().get(optionIndex);
+        option.setVotes(option.getVotes() + 1);  // Increment vote count
+        return ResponseEntity.status(HttpStatus.OK).body("Upvoted successfully");
+    }
+
+    // 7. Downvote an option
+    @PostMapping("/{pollId}/options/{optionIndex}/downvote")
+    public ResponseEntity<String> downvote(@PathVariable int pollId, @PathVariable int optionIndex) {
+        Poll poll = pollManager.getPollById(pollId);
+        if (poll == null || optionIndex < 0 || optionIndex >= poll.getVoteOptions().size()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Poll or option not found");
+        }
+
+        VoteOption option = poll.getVoteOptions().get(optionIndex);
+        option.setVotes(option.getVotes() - 1);  // Decrement vote count
+        return ResponseEntity.status(HttpStatus.OK).body("Downvoted successfully");
+    }
+
+    // 8. Clear all polls
+    @DeleteMapping("/clear")
+    public ResponseEntity<String> clearAllPolls() {
+        pollManager.clearPolls();
+        return ResponseEntity.status(HttpStatus.OK).body("All polls cleared");
     }
 }

@@ -1,47 +1,56 @@
 import React, { useState } from "react";
 
 function PollVoterComponent({ poll }) {
-  const [errorMessage, setErrorMessage] = useState("");
+  // Local state to manage live updates of vote counts
+  const [voteOptions, setVoteOptions] = useState(poll.voteOptions);
 
   const upvote = async (index) => {
-    poll.options[index].votes += 1;
-    const response = await fetch(`/polls/${poll.id}/options/${index}/upvote`, {
-      method: "POST",
-    });
+    try {
+      const response = await fetch(`polls/${poll.id}/options/${index}/upvote`, {
+        method: "POST",
+      });
+      if (!response.ok) {
+        console.error("Failed to upvote");
+      } else {
+        console.log("Upvoted successfully");
 
-    if (!response.ok) {
-      console.error("Failed to upvote");
-      poll.options[index].votes -= 1; // Revert the change if the upvote fails
-      setErrorMessage("Failed to upvote");
-    } else {
-      console.log("Upvoted successfully");
-      setErrorMessage(""); // Clear any previous error messages
+        // Update the local state to reflect the upvote
+        const updatedOptions = [...voteOptions];
+        updatedOptions[index].votes += 1;
+        setVoteOptions(updatedOptions);
+      }
+    } catch (error) {
+      console.error("Error during upvote:", error);
     }
   };
 
   const downvote = async (index) => {
-    poll.options[index].votes -= 1;
-    const response = await fetch(
-      `/polls/${poll.id}/options/${index}/downvote`,
-      {
-        method: "POST",
-      }
-    );
+    try {
+      const response = await fetch(
+        `polls/${poll.id}/options/${index}/downvote`,
+        {
+          method: "POST",
+        }
+      );
+      if (!response.ok) {
+        console.error("Failed to downvote");
+      } else {
+        console.log("Downvoted successfully");
 
-    if (!response.ok) {
-      console.error("Failed to downvote");
-      poll.options[index].votes += 1; // Revert the change if the downvote fails
-      setErrorMessage("Failed to downvote");
-    } else {
-      console.log("Downvoted successfully");
-      setErrorMessage(""); // Clear any previous error messages
+        // Update the local state to reflect the downvote
+        const updatedOptions = [...voteOptions];
+        updatedOptions[index].votes -= 1;
+        setVoteOptions(updatedOptions);
+      }
+    } catch (error) {
+      console.error("Error during downvote:", error);
     }
   };
 
   return (
     <div>
       <h2>{poll.question}</h2>
-      {poll.options.map((option, index) => (
+      {voteOptions.map((option, index) => (
         <div key={index}>
           <span>{option.caption}</span>
           <button type="button" onClick={() => upvote(index)}>
@@ -53,7 +62,6 @@ function PollVoterComponent({ poll }) {
           <span>{option.votes} Votes</span>
         </div>
       ))}
-      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
     </div>
   );
 }

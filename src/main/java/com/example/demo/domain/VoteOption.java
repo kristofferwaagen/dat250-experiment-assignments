@@ -3,6 +3,7 @@ package com.example.demo.domain;
 public class VoteOption {
     private String caption;
     private int presentationOrder;
+    private int votes; // Add a votes field
 
     public VoteOption() {}
 
@@ -21,5 +22,13 @@ public class VoteOption {
 
     public void setPresentationOrder(int presentationOrder) {
         this.presentationOrder = presentationOrder;
+    }
+
+    public int getVotes() {
+        return votes;
+    }
+
+    public void setVotes(int votes) {
+        this.votes = votes;
     }
 }
